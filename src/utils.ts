@@ -11,13 +11,13 @@ export function cleanStack(
   {
     basePath,
     pathFilter,
-  }: { basePath?: string; pathFilter?: (path: string) => boolean } = {}
+  }: { basePath?: string; pathFilter?: (path: string) => boolean } = {},
 ) {
   const basePathRegex =
     basePath &&
     new RegExp(
       `(file://)?${escapeStringRegexp(basePath.replace(/\\/g, "/"))}/?`,
-      "g"
+      "g",
     );
   const homeDirectory = pretty ? getHomeDirectory() : "";
 
@@ -48,7 +48,7 @@ export function cleanStack(
 
       if (pretty) {
         line = line.replace(extractPathRegex, (m, p1: string) =>
-          m.replace(p1, p1.replace(homeDirectory, "~"))
+          m.replace(p1, p1.replace(homeDirectory, "~")),
         );
       }
 

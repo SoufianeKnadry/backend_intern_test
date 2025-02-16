@@ -24,9 +24,9 @@ export const Mutation: IMutation<Context> = {
 
   updateTodo: async (_, { input }, { prisma }) => {
     const { id, title, completed } = input;
-  
+
     // Prepare the data object for Prisma
-  const data: { title?: string; completed?: boolean } = {};
+    const data: { title?: string; completed?: boolean } = {};
     if (title != null) {
       data.title = title;
     }
@@ -61,6 +61,4 @@ export const Mutation: IMutation<Context> = {
       return false;
     }
   },
-  
-
 };

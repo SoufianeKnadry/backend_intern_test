@@ -7,13 +7,12 @@ export const Query: IQuery<Context> = {
       where: completed != null ? { completed } : {},
     });
 
-    return todos.map(todo => ({
+    return todos.map((todo) => ({
       ...todo,
       createdAt: todo.createdAt.toISOString(),
       updatedAt: todo.updatedAt.toISOString(),
     }));
   },
-
 
   getTodo: async (_, { id }, { prisma }) => {
     const todo = await prisma.todo.findUnique({
@@ -23,11 +22,11 @@ export const Query: IQuery<Context> = {
     if (todo) {
       return {
         ...todo,
-        createdAt: todo.createdAt.toISOString(), 
-        updatedAt: todo.updatedAt.toISOString(),  
+        createdAt: todo.createdAt.toISOString(),
+        updatedAt: todo.updatedAt.toISOString(),
       };
     }
 
-    return null; 
+    return null;
   },
 };

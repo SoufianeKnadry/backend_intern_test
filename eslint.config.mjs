@@ -13,11 +13,11 @@ export default [
   pluginJs.configs.recommended,
   ...tseslint.configs.recommended,
   {
-    files: ["src/graphql/generated/*", "prisma/migrations/*"], 
+    files: ["src/graphql/generated/*", "prisma/migrations/*"],
     rules: {
-      "no-unused-vars": "off", 
-      "@typescript-eslint/no-empty-object-type": "off",  
-      "@typescript-eslint/no-explicit-any": "off",      
+      "no-unused-vars": "off",
+      "@typescript-eslint/no-empty-object-type": "off",
+      "@typescript-eslint/no-explicit-any": "off",
     },
   },
 ];
