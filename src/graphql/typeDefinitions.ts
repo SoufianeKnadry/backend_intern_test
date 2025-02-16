@@ -4,6 +4,7 @@ export const typeDefs = /* GraphQL */ `
     title: String!
     completed: Boolean!
     createdAt: String!
+    updatedAt: String!
   }
 
   input CreateTodoInput {
