@@ -10,7 +10,7 @@ export const Mutation: IMutation<Context> = {
           completed: false,
         },
       });
-
+      // This is needed to convert prisma's date format to string
       return {
         ...newTodo,
         createdAt: newTodo.createdAt.toISOString(),
@@ -22,5 +22,33 @@ export const Mutation: IMutation<Context> = {
     }
   },
 
- 
+  updateTodo: async (_, { input }, { prisma }) => {
+    const { id, title, completed } = input;
+  
+    // Prepare the data object for Prisma
+  const data: { title?: string; completed?: boolean } = {};
+    if (title != null) {
+      data.title = title;
+    }
+    if (completed != null) {
+      data.completed = completed;
+    }
+    try {
+      // Send the data object
+      const updatedTodo = await prisma.todo.update({
+        where: { id },
+        data,
+      });
+      return {
+        ...updatedTodo,
+        createdAt: updatedTodo.createdAt.toISOString(),
+        updatedAt: updatedTodo.updatedAt.toISOString(),
+      };
+    } catch (error) {
+      console.error("Error updating todo:", error);
+      throw new Error("Failed to update todo");
+    }
+  }
+  
+
 };
