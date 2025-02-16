@@ -17,8 +17,15 @@ export const typeDefs = /* GraphQL */ `
     completed: Boolean
   }
 
+  input GetTodosInput {
+    completed: Boolean
+    page: Int = 1
+    limit: Int = 10
+    sortOrder: String = "asc" 
+  }
+
   type Query {
-    getTodos(completed: Boolean): [Todo!]!
+    getTodos(input: GetTodosInput): [Todo]!
     getTodo(id: ID!): Todo
   }
 
