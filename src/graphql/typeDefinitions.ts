@@ -18,7 +18,7 @@ export const typeDefs = /* GraphQL */ `
   }
 
   type Query {
-    getTodos: [Todo!]!
+    getTodos(completed: Boolean): [Todo!]!
     getTodo(id: ID!): Todo
   }
 
