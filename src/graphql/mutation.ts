@@ -2,16 +2,25 @@ import { type MutationResolvers as IMutation } from "./generated/graphql";
 import { Context } from "./context";
 
 export const Mutation: IMutation<Context> = {
-  createSomething: async (_, { input }, { prisma }) => {
-    const something = await prisma.something.create({
-      data: {
-        name: input.name,
-      },
-    });
+  createTodo: async (_, { input }, { prisma }) => {
+    try {
+      const newTodo = await prisma.todo.create({
+        data: {
+          title: input.title,
+          completed: false,
+        },
+      });
 
-    return {
-      id: something.id,
-      name: something.name,
-    };
+      return {
+        ...newTodo,
+        createdAt: newTodo.createdAt.toISOString(),
+        updatedAt: newTodo.updatedAt.toISOString(),
+      };
+    } catch (error) {
+      console.error("Error creating todo:", error);
+      throw new Error("Failed to create todo");
+    }
   },
+
+ 
 };
