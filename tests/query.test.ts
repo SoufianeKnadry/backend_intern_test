@@ -54,7 +54,7 @@ describe("GraphQL getTodos", () => {
     const todos = response.body.data.getTodos;
     expect(todos).to.be.an("array");
     todos.forEach((todo: { completed: boolean }) => {
-      return expect(todo.completed).to.be.false; 
+      expect(todo.completed).to.equal(false);
     });
   });
 
@@ -86,7 +86,8 @@ describe("GraphQL getTodos", () => {
     const todos = response.body.data.getTodos;
     expect(todos).to.be.an("array");
     todos.forEach((todo: { completed: boolean }) => {
-      return expect(todo.completed).to.be.true;
+      expect(todo.completed).to.equal(true);
+
     });
   });
 
