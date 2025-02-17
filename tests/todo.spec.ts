@@ -158,5 +158,48 @@ describe("GraphQL getTodos", () => {
     }
   });
 
- 
+  // Test: Verify that pagination works by comparing results from two different pages
+  it("should fetch different todos for different pages", async () => {
+    const query = `
+       query GetTodos($completed: Boolean, $page: Int, $limit: Int, $sortOrder: String) {
+        getTodos(input: { completed: $completed, page: $page, limit: $limit, sortOrder: $sortOrder }) {
+          id
+          title
+          completed
+          createdAt
+          updatedAt
+        }
+      }
+    `;
+    const variablesPage1 = {
+      completed: false,
+      page: 1,
+      limit: 2,
+      sortOrder: "asc"
+    };
+    const variablesPage2 = {
+      completed: false,
+      page: 2,
+      limit: 2,
+      sortOrder: "asc"
+    };
+
+    const responsePage1 = await request(app)
+      .post("/graphql")
+      .send({ query, variables: variablesPage1 })
+      .expect(200);
+
+    const responsePage2 = await request(app)
+      .post("/graphql")
+      .send({ query, variables: variablesPage2 })
+      .expect(200);
+
+    const todosPage1 = responsePage1.body.data.getTodos;
+    const todosPage2 = responsePage2.body.data.getTodos;
+    expect(todosPage1).to.be.an("array");
+    expect(todosPage2).to.be.an("array");
+    if (todosPage1.length && todosPage2.length) {
+      expect(todosPage1[0].id).to.not.equal(todosPage2[0].id);
+    }
+  });
 });
