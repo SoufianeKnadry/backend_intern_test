@@ -90,5 +90,73 @@ describe("GraphQL getTodos", () => {
     });
   });
 
-  
+  // Test: Verify that todos are sorted in ascending order by createdAt
+  it("should fetch todos sorted in ascending order by createdAt", async () => {
+    const query = `
+      query GetTodos($completed: Boolean, $page: Int, $limit: Int, $sortOrder: String) {
+        getTodos(input: { completed: $completed, page: $page, limit: $limit, sortOrder: $sortOrder }) {
+          id
+          title
+          completed
+          createdAt
+          updatedAt
+        }
+      }
+    `;
+    const variables = {
+      completed: false,
+      page: 1,
+      limit: 10,
+      sortOrder: "asc"
+    };
+
+    const response = await request(app)
+      .post("/graphql")
+      .send({ query, variables })
+      .expect(200);
+
+    const todos = response.body.data.getTodos;
+    expect(todos).to.be.an("array");
+    for (let i = 1; i < todos.length; i++) {
+      const prev = new Date(todos[i - 1].createdAt);
+      const curr = new Date(todos[i].createdAt);
+      expect(prev.getTime()).to.be.at.most(curr.getTime());
+    }
+  });
+
+  // Test: Verify that todos are sorted in descending order by createdAt
+  it("should fetch todos sorted in descending order by createdAt", async () => {
+    const query = `
+       query GetTodos($completed: Boolean, $page: Int, $limit: Int, $sortOrder: String) {
+        getTodos(input: { completed: $completed, page: $page, limit: $limit, sortOrder: $sortOrder }) {
+          id
+          title
+          completed
+          createdAt
+          updatedAt
+        }
+      }
+    `;
+    const variables = {
+      completed: false,
+      page: 1,
+      limit: 10,
+      sortOrder: "desc"
+    };
+
+    const response = await request(app)
+      .post("/graphql")
+      .send({ query, variables })
+      .expect(200);
+
+    const todos = response.body.data.getTodos;
+    expect(todos).to.be.an("array");
+    for (let i = 1; i < todos.length; i++) {
+      const prev = new Date(todos[i - 1].createdAt);
+      const curr = new Date(todos[i].createdAt);
+      expect(prev.getTime()).to.be.at.least(curr.getTime());
+    }
+  });
+
+ 
 });
