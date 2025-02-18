@@ -4,6 +4,9 @@ import { Context } from "./context";
 export const Mutation: IMutation<Context> = {
   createTodo: async (_, { input }, { prisma }) => {
     try {
+      if (!input.title || input.title.trim() === "") {
+        throw new Error("Title is required to create a todo");
+      }
       const newTodo = await prisma.todo.create({
         data: {
           title: input.title,
