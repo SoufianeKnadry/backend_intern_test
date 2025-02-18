@@ -2,27 +2,6 @@ import { type QueryResolvers as IQuery } from "./generated/graphql";
 import { Context } from "./context";
 import { Prisma } from "@prisma/client";
 
-const buildWhereClause = (
-  completed?: boolean,
-  dueFilter?: string,
-): Prisma.TodoWhereInput => {
-  const now = new Date();
-  const adjustedNow = new Date(now.toISOString());
-
-  const whereClause: Prisma.TodoWhereInput = {};
-
-  if (completed !== undefined) {
-    whereClause.completed = completed;
-  }
-
-  if (dueFilter === "overdue") {
-    whereClause.dueDate = { lt: adjustedNow };
-  } else if (dueFilter === "upcoming") {
-    whereClause.dueDate = { gte: adjustedNow };
-  }
-
-  return whereClause;
-};
 
 export const Query: IQuery<Context> = {
   getTodos: async (_, { input }, { prisma }) => {
@@ -39,12 +18,11 @@ export const Query: IQuery<Context> = {
       sanitizedCompleted,
       sanitizedDueFilter,
     );
-    console.log(whereClause);
     const todos = await prisma.todo.findMany({
       where: whereClause,
       skip: (pageNumber - 1) * limitNumber,
       take: limitNumber,
-      orderBy: { dueDate: order },
+      orderBy: { createdAt: order },
     });
 
     return todos.map((todo) => ({
@@ -70,4 +48,28 @@ export const Query: IQuery<Context> = {
 
     return null;
   },
+};
+
+// Helper function
+
+const buildWhereClause = (
+  completed?: boolean,
+  dueFilter?: string,
+): Prisma.TodoWhereInput => {
+  const now = new Date();
+  const adjustedNow = new Date(now.toISOString());
+
+  const whereClause: Prisma.TodoWhereInput = {};
+
+  if (completed !== undefined) {
+    whereClause.completed = completed;
+  }
+
+  if (dueFilter === "overdue") {
+    whereClause.dueDate = { lt: adjustedNow };
+  } else if (dueFilter === "upcoming") {
+    whereClause.dueDate = { gte: adjustedNow };
+  }
+
+  return whereClause;
 };
