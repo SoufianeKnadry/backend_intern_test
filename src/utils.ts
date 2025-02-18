@@ -11,13 +11,13 @@ export function cleanStack(
   {
     basePath,
     pathFilter,
-  }: { basePath?: string; pathFilter?: (path: string) => boolean } = {}
+  }: { basePath?: string; pathFilter?: (path: string) => boolean } = {},
 ) {
   const basePathRegex =
     basePath &&
     new RegExp(
       `(file://)?${escapeStringRegexp(basePath.replace(/\\/g, "/"))}/?`,
-      "g"
+      "g",
     );
   const homeDirectory = pretty ? getHomeDirectory() : "";
 
@@ -48,7 +48,7 @@ export function cleanStack(
 
       if (pretty) {
         line = line.replace(extractPathRegex, (m, p1: string) =>
-          m.replace(p1, p1.replace(homeDirectory, "~"))
+          m.replace(p1, p1.replace(homeDirectory, "~")),
         );
       }
 
@@ -66,3 +66,4 @@ function escapeStringRegexp(string: string) {
   // Use a simple backslash escape when it's always valid, and a `\xnn` escape when the simpler form would be disallowed by Unicode patterns' stricter grammar.
   return string.replace(/[|\\{}()[\]^$+*?.]/g, "\\$&").replace(/-/g, "\\x2d");
 }
+
