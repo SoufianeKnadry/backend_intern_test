@@ -1,6 +1,6 @@
 import { expect } from "chai";
 import request from "supertest";
-import { app } from "../src/app"; 
+import { app } from "../src/app";
 
 describe("GraphQL createTodo Mutation", () => {
   it("should create a new todo", async () => {
@@ -51,13 +51,13 @@ describe("GraphQL createTodo Mutation", () => {
 
     const variables = {
       input: {
-        title: "", 
+        title: "",
       },
     };
 
     const response = await request(app)
       .post("/graphql")
-      .send({ query, variables })
+      .send({ query, variables });
     expect(response.body.errors[0].message).to.include("Unexpected error");
   });
 
@@ -73,21 +73,21 @@ describe("GraphQL createTodo Mutation", () => {
         }
       }
     `;
-  
+
     const createVariables = {
       input: {
         title: "Test Todo",
       },
     };
-  
+
     const createResponse = await request(app)
       .post("/graphql")
       .send({ query: createTodoQuery, variables: createVariables })
       .expect(200);
-  
+
     const newTodo = createResponse.body.data.createTodo;
-    const todoId = newTodo.id; 
-  
+    const todoId = newTodo.id;
+
     const updateTodoQuery = `
       mutation updateTodo($input: UpdateTodoInput!) {
         updateTodo(input: $input) {
@@ -99,13 +99,13 @@ describe("GraphQL createTodo Mutation", () => {
         }
       }
     `;
-  
+
     const updateInput = {
-      id: todoId,  
+      id: todoId,
       title: "Updated Todo Title",
       completed: true,
     };
-  
+
     const updateResponse = await request(app)
       .post("/graphql")
       .send({
@@ -113,11 +113,10 @@ describe("GraphQL createTodo Mutation", () => {
         variables: { input: updateInput },
       })
       .expect(200);
-  
+
     const updatedTodo = updateResponse.body.data.updateTodo;
     expect(updatedTodo).to.have.property("id");
     expect(updatedTodo.title).to.equal(updateInput.title);
     expect(updatedTodo.completed).to.equal(updateInput.completed);
   });
-  
 });

@@ -45,4 +45,4 @@ process.on("SIGINT", () => {
   process.exit(0);
 });
 
-export { app, port }; 
+export { app, port };

@@ -43,7 +43,7 @@ describe("GraphQL getTodos", () => {
       completed: false,
       page: 1,
       limit: 10,
-      sortOrder: "asc"
+      sortOrder: "asc",
     };
 
     const response = await request(app)
@@ -75,7 +75,7 @@ describe("GraphQL getTodos", () => {
       completed: true,
       page: 1,
       limit: 10,
-      sortOrder: "asc"
+      sortOrder: "asc",
     };
 
     const response = await request(app)
@@ -87,7 +87,6 @@ describe("GraphQL getTodos", () => {
     expect(todos).to.be.an("array");
     todos.forEach((todo: { completed: boolean }) => {
       expect(todo.completed).to.equal(true);
-
     });
   });
 
@@ -108,7 +107,7 @@ describe("GraphQL getTodos", () => {
       completed: false,
       page: 1,
       limit: 10,
-      sortOrder: "asc"
+      sortOrder: "asc",
     };
 
     const response = await request(app)
@@ -142,7 +141,7 @@ describe("GraphQL getTodos", () => {
       completed: false,
       page: 1,
       limit: 10,
-      sortOrder: "desc"
+      sortOrder: "desc",
     };
 
     const response = await request(app)
@@ -176,13 +175,13 @@ describe("GraphQL getTodos", () => {
       completed: false,
       page: 1,
       limit: 2,
-      sortOrder: "asc"
+      sortOrder: "asc",
     };
     const variablesPage2 = {
       completed: false,
       page: 2,
       limit: 2,
-      sortOrder: "asc"
+      sortOrder: "asc",
     };
 
     const responsePage1 = await request(app)
