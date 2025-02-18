@@ -5,10 +5,12 @@ export const typeDefs = /* GraphQL */ `
     completed: Boolean!
     createdAt: String!
     updatedAt: String!
+    dueDate: String!
   }
 
   input CreateTodoInput {
     title: String!
+    dueDate: String
   }
 
   input UpdateTodoInput {
@@ -21,7 +23,8 @@ export const typeDefs = /* GraphQL */ `
     completed: Boolean
     page: Int = 1
     limit: Int = 10
-    sortOrder: String = "asc" 
+    sortOrder: String = "asc"
+    dueFilter: String
   }
 
   type Query {

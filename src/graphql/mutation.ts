@@ -18,6 +18,7 @@ export const Mutation: IMutation<Context> = {
         ...newTodo,
         createdAt: newTodo.createdAt.toISOString(),
         updatedAt: newTodo.updatedAt.toISOString(),
+        dueDate: newTodo.dueDate.toISOString(),
       };
     } catch (error) {
       console.error("Error creating todo:", error);
@@ -46,6 +47,7 @@ export const Mutation: IMutation<Context> = {
         ...updatedTodo,
         createdAt: updatedTodo.createdAt.toISOString(),
         updatedAt: updatedTodo.updatedAt.toISOString(),
+        dueDate: updatedTodo.dueDate.toISOString(),
       };
     } catch (error) {
       console.error("Error updating todo:", error);

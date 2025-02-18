@@ -1,47 +1,54 @@
 import { type QueryResolvers as IQuery } from "./generated/graphql";
 import { Context } from "./context";
+import { Prisma } from "@prisma/client";
+
+const buildWhereClause = (
+  completed?: boolean,
+  dueFilter?: string
+): Prisma.TodoWhereInput => {
+  const now = new Date();
+  const whereClause: Prisma.TodoWhereInput = {};
+
+  if (completed !== undefined) {
+    whereClause.completed = completed;
+  }
+
+  if (dueFilter === "overdue") {
+    whereClause.dueDate = { lt: now };  
+  } else if (dueFilter === "upcoming") {
+    whereClause.dueDate = { gte: now };  
+  }
+
+  return whereClause;
+};
 
 export const Query: IQuery<Context> = {
   getTodos: async (_, { input }, { prisma }) => {
-    if (input != null) {
-      const { completed, page, limit, sortOrder } = input;
-      const pageNumber = page ?? 1;
-      const limitNumber = limit ?? 10;
-      const order = sortOrder === "desc" ? "desc" : "asc";
+    // If input is undefined or null, return all todos
+    const { completed, page, limit, sortOrder, dueFilter } = input ?? {}; 
+    const pageNumber = page ?? 1;
+    const limitNumber = limit ?? 10;
+    const order = sortOrder === "desc" ? "desc" : "asc";
   
-      const todos = await prisma.todo.findMany({
-        where: completed != null ? { completed } : {},
-        skip: (pageNumber - 1) * limitNumber,
-        take: limitNumber,
-        orderBy: {
-          createdAt: order,
-        },
-      });
-  
-      return todos.map((todo) => ({
-        ...todo,
-        createdAt: todo.createdAt.toISOString(),
-        updatedAt: todo.updatedAt.toISOString(),
-      }));
-    }
+    // Build the where clause dynamically based on provided filters
+    const sanitizedCompleted = completed ?? undefined ;
+    const sanitizedDueFilter = dueFilter ?? undefined ;
+    const whereClause = buildWhereClause(sanitizedCompleted, sanitizedDueFilter);
   
     const todos = await prisma.todo.findMany({
-      orderBy: {
-        createdAt: 'asc',
-      },
+      where: whereClause, 
+      skip: (pageNumber - 1) * limitNumber,
+      take: limitNumber,
+      orderBy: { dueDate: order },
     });
   
     return todos.map((todo) => ({
       ...todo,
       createdAt: todo.createdAt.toISOString(),
       updatedAt: todo.updatedAt.toISOString(),
+      dueDate: todo.dueDate.toISOString(),
     }));
   },
-
-  
-  
-  
-
   getTodo: async (_, { id }, { prisma }) => {
     const todo = await prisma.todo.findUnique({
       where: { id },
@@ -52,6 +59,7 @@ export const Query: IQuery<Context> = {
         ...todo,
         createdAt: todo.createdAt.toISOString(),
         updatedAt: todo.updatedAt.toISOString(),
+        dueDate: todo.dueDate.toISOString(),
       };
     }
 
