@@ -7,6 +7,9 @@ const buildWhereClause = (
   dueFilter?: string
 ): Prisma.TodoWhereInput => {
   const now = new Date();
+  const adjustedNow = new Date(now.toISOString()); // Ensuring time is in UTC (ISO format)
+
+
   const whereClause: Prisma.TodoWhereInput = {};
 
   if (completed !== undefined) {
@@ -14,13 +17,16 @@ const buildWhereClause = (
   }
 
   if (dueFilter === "overdue") {
-    whereClause.dueDate = { lt: now };  
+    whereClause.dueDate = { lt: adjustedNow };  
+
   } else if (dueFilter === "upcoming") {
-    whereClause.dueDate = { gte: now };  
+    whereClause.dueDate = { gte: adjustedNow }; 
+
   }
 
   return whereClause;
 };
+
 
 export const Query: IQuery<Context> = {
   getTodos: async (_, { input }, { prisma }) => {
@@ -34,7 +40,7 @@ export const Query: IQuery<Context> = {
     const sanitizedCompleted = completed ?? undefined ;
     const sanitizedDueFilter = dueFilter ?? undefined ;
     const whereClause = buildWhereClause(sanitizedCompleted, sanitizedDueFilter);
-  
+    console.log(whereClause)
     const todos = await prisma.todo.findMany({
       where: whereClause, 
       skip: (pageNumber - 1) * limitNumber,

@@ -5,7 +5,7 @@ export const typeDefs = /* GraphQL */ `
     completed: Boolean!
     createdAt: String!
     updatedAt: String!
-    dueDate: String!
+    dueDate: String
   }
 
   input CreateTodoInput {

@@ -7,24 +7,33 @@ export const Mutation: IMutation<Context> = {
       if (!input.title || input.title.trim() === "") {
         throw new Error("Title is required to create a todo");
       }
+  
+      // If the dueDate is not provided, set it to now plus 1 day
+      const dueDate = input.dueDate
+        ? new Date(input.dueDate)
+        : new Date(new Date().setDate(new Date().getDate() + 1)); 
+  
       const newTodo = await prisma.todo.create({
         data: {
           title: input.title,
           completed: false,
+          dueDate: dueDate,
         },
       });
-      // This is needed to convert prisma's date format to string
+  
       return {
         ...newTodo,
         createdAt: newTodo.createdAt.toISOString(),
         updatedAt: newTodo.updatedAt.toISOString(),
-        dueDate: newTodo.dueDate.toISOString(),
+        dueDate: newTodo.dueDate.toISOString(), 
       };
     } catch (error) {
       console.error("Error creating todo:", error);
       throw new Error("Failed to create todo");
     }
   },
+  
+  
 
   updateTodo: async (_, { input }, { prisma }) => {
     const { id, title, completed } = input;
